@@ -127,12 +127,40 @@ class Tree
     array << root.data
   end
 
-  def height(node)
+  def height(node = @root.data)
+    node = find(node)
+    left_height = 0
+    right_height = 0
+    right = node
+    left = node
+    while left.left
+      left_height += 1
+      left = left.left
+    end
+
+    while right.right
+      right_height += 1
+      right = right.right
+    end
+
+    if left_height >= right_height
+      return left_height
+    else
+      return right_height
+    end
 
   end
 
-  def depth(node)
-
+  def depth(node, root = @root, depth = 0)
+    if root == nil || root.data == node
+      return depth
+    elsif root.data < node
+      depth += 1
+      depth(node, root.right, depth)
+    else
+      depth += 1
+      depth(node, root.left, depth)
+    end
   end
 
   def pretty_print(node = @root, prefix = '', is_left = true)
@@ -156,3 +184,9 @@ p tree.level_order
 p tree.inorder
 p tree.preorder
 p tree.postorder
+p tree.height
+p tree.height(67)
+p tree.height(5)
+p "Depth of 9: #{tree.depth(9)}"
+p "Depth of 67: #{tree.depth(67)}"
+p "Depth of 5: #{tree.depth(5)}"
