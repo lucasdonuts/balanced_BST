@@ -1,19 +1,14 @@
-#Time to work on height and depth methods
-
 require_relative 'node.rb'
-require 'pry'
 
 class Tree
   attr_accessor :root
 
   def initialize(array)
     @root = build_tree(array.sort.uniq)
-    #puts "@root: #{@root.data}"
   end
 
   def build_tree(array, first = 0, last = array.length - 1)
-    
-    # base case
+
     if(first > last)
       return nil
     end
@@ -21,14 +16,10 @@ class Tree
     mid = (first + last) / 2
 
     node = Node.new(array[mid])
-    #p "Node: #{node.data}"
     root ||= node
-    #p "Root: #{root.data}"
 
     node.left = build_tree(array, first, mid - 1)
-    #p "Left: #{node.left}"
     node.right = build_tree(array, mid + 1, last)
-    #p "Right: #{node.right}"
 
     return root
 
@@ -45,7 +36,6 @@ class Tree
   end
 
   def insert(data, root = @root)
-    #puts "Root: #{root.data}"
     if root == nil
       return root = Node.new(data)
     else
@@ -162,6 +152,17 @@ class Tree
       depth(node, root.left, depth)
     end
   end
+  
+  def balanced?
+    left_height = height(@root.left.data)
+    right_height = height(@root.right.data)
+    (left_height - right_height < 2 && left_height - right_height > -2) ? true : false
+  end
+
+  def rebalance
+    array = inorder
+    @root = build_tree(array)
+  end
 
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
@@ -170,23 +171,3 @@ class Tree
   end
 
 end
-
-array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
-tree = Tree.new(array)
-#tree.pretty_print
-tree.insert(32)
-#tree.pretty_print
-tree.delete(8)
-tree.pretty_print
-#puts "@root: #{tree.root.data}"
-#puts tree.find(23)
-p tree.level_order
-p tree.inorder
-p tree.preorder
-p tree.postorder
-p tree.height
-p tree.height(67)
-p tree.height(5)
-p "Depth of 9: #{tree.depth(9)}"
-p "Depth of 67: #{tree.depth(67)}"
-p "Depth of 5: #{tree.depth(5)}"
